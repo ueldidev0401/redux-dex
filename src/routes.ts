@@ -1,55 +1,25 @@
 import { dAppName } from 'config';
 import withPageTitle from './components/PageTitle';
-import CasinoProtocolHome from './pages';
-import PreSale from './pages/Presale';
-import Casinoswap from './pages/Casinoswap';
-import Farms from './pages/Farms';
-import Bridge from './pages/Bridge';
-import Bettingverse from './pages/Bettingverse';
+import Staking from './pages';
+import Dashboard from './pages/Dashboard';
 
 export const routeNames = {
-  home: '/',
+  staking: '/',
   unlock: '/unlock',
-  presale: '/presale',
-  farms: '/farms',
-  casinoswap: '/casinoswap',
-  bridge: '/bridge',
-  bettingverse: '/bettingverse'
+  dashboard: '/casinoswap',
 };
 
 const routes: Array<any> = [
 
   {
-    path: routeNames.home,
-    title: 'Home',
-    component: CasinoProtocolHome
-  },
-
-  {
-    path: routeNames.farms,
-    title: 'Farms',
-    component: Farms
-  },
-
-  {
-    path: routeNames.presale,
-    title: 'PreSale',
-    component: PreSale
+    path: routeNames.staking,
+    title: 'Staking',
+    component: Staking
   },
   { 
-    path: routeNames.casinoswap,
-    title: 'Casinoswap',
-    component: Casinoswap
-  },
-  { 
-    path: routeNames.bridge,
-    title: 'Bridge',
-    component: Bridge
-  },
-  { 
-    path: routeNames.bettingverse,
-    title: 'Bettingverse',
-    component: Bettingverse
+    path: routeNames.dashboard,
+    title: 'Dashboard',
+    component: Dashboard
   }
 ];
 

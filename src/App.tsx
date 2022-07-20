@@ -13,7 +13,7 @@ const App = () => {
           <Routes>
             <Route
               path={routeNames.unlock}
-              element={<UnlockPage loginRoute={routeNames.home} />}
+              element={<UnlockPage loginRoute={routeNames.staking} />}
             />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
             {routes.map((route: any, index: number) => (
               <Route
@@ -22,7 +22,7 @@ const App = () => {
                 element={<route.component />}
               />
             ))}
-            <Route path="/" element={<Navigate replace to={routeNames.home} />} />
+            <Route path="/" element={<Navigate replace to={routeNames.staking} />} />
             <Route path='*' element={<PageNotFound />} />
           </Routes>
         </Layout>
