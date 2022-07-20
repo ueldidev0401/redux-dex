@@ -28,14 +28,6 @@ const CasinoProtocolHome = () => {
                             </Link>
                         </Col>
                         <Col xs="6" sm="2">
-                            <Link to={routeNames.dicegame}>
-                                <div className="BTX-home-but">
-                                    <img src={Dicegame} />
-                                    <p>Dice game</p>
-                                </div>
-                            </Link>
-                        </Col>
-                        <Col xs="6" sm="2">
                             <Link to={routeNames.farms}>
                                 <div className="BTX-home-but">
                                     <img src={FarmImg} />

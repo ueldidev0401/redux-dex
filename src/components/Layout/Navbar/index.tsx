@@ -26,9 +26,6 @@ const Navbar = () => {
             <Link to={routeNames.casinoswap} className='custom-navbar-button custom-navbar-normal-button'>
               Casinoswap
             </Link>
-            <Link to={routeNames.dicegame} className='custom-navbar-button custom-navbar-normal-button'>
-              Dice game
-            </Link>
             <Link to={routeNames.farms} className='custom-navbar-button custom-navbar-normal-button'>
               Farms
             </Link>

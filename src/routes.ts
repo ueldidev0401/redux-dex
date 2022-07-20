@@ -3,7 +3,6 @@ import withPageTitle from './components/PageTitle';
 import CasinoProtocolHome from './pages';
 import PreSale from './pages/Presale';
 import Casinoswap from './pages/Casinoswap';
-import DiceGame from './pages/DiceGame';
 import Farms from './pages/Farms';
 import Bridge from './pages/Bridge';
 import Bettingverse from './pages/Bettingverse';
@@ -14,7 +13,6 @@ export const routeNames = {
   presale: '/presale',
   farms: '/farms',
   casinoswap: '/casinoswap',
-  dicegame: '/dice-game',
   bridge: '/bridge',
   bettingverse: '/bettingverse'
 };
@@ -42,11 +40,6 @@ const routes: Array<any> = [
     path: routeNames.casinoswap,
     title: 'Casinoswap',
     component: Casinoswap
-  },
-  { 
-    path: routeNames.dicegame,
-    title: 'Dice Game',
-    component: DiceGame
   },
   { 
     path: routeNames.bridge,
