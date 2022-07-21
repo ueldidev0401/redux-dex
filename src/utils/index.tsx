@@ -6,4 +6,3 @@ export function getCurrentTimestamp() {
     return (new Date()).getTime();
 }
 export * from './convert';
-export * from './state';
