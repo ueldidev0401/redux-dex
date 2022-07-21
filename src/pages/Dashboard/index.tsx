@@ -1,14 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import Slider, { SliderThumb } from '@mui/material/Slider';
-import { styled } from '@mui/material/styles';
-import { Row, Col } from 'react-bootstrap';
-import { AiFillLock, AiOutlineInfoCircle } from "react-icons/ai";
-import Modal from 'react-modal';
-import BTXLogo from 'assets/img/token logos/BTX.png';
-import EGLDLogo from 'assets/img/token logos/EGLD.png';
-import LPFarmLogo from 'assets/img/LP Farm.png';
-import casinoswapLogo from 'assets/img/paraswap.png';
 import './index.scss';
 
 

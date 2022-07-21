@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar as BsNavbar, NavItem, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar as BsNavbar, NavItem, Nav, NavDropdown, Modal as BsModal } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { routeNames } from 'routes';
 import logo from '../../../assets/img/main-logo.png';
@@ -10,14 +10,22 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const onhandleConnectWalletButton = () => {
+    alert('connect wallet');
+  };
+
+  const onhandleBuyRDXButton = () => {
+    alert('buy RDX!');
+  };
+
   return (
-    <BsNavbar className='px-4 py-3' expand='lg' collapseOnSelect>
+    <BsNavbar className='px-5 py-3' expand='lg' collapseOnSelect>
       <div className='container-fluid'>
         <Link
           className='d-flex align-items-center navbar-brand mr-0 c-logo-container'
           to={routeNames.staking}
         >
-          <img className="casino-navbar" src={logo}/>
+          <img src={logo}/>
         </Link>
 
         <BsNavbar.Toggle aria-controls='responsive-navbar-nav' style={{ background: "#D8D3D3" }} />
@@ -29,8 +37,11 @@ const Navbar = () => {
             <Link to={routeNames.dashboard} className='custom-navbar-button custom-navbar-normal-button'>
               Dashboard
             </Link>
-            <Link to={{ pathname: routeNames.unlock }} state={{ pastURL: location.pathname }} className='custom-navbar-button auth-button'>
+            <Link to={'#'} className='custom-navbar-button auth-button' onClick={onhandleConnectWalletButton}>
               Connect Wallet
+            </Link>
+            <Link to={ '#' } className='custom-navbar-button buy-rdx-button' onClick={onhandleBuyRDXButton}>
+              Buy $RDX
             </Link>
           </Nav>
         </BsNavbar.Collapse>

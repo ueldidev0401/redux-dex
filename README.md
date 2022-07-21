@@ -37,7 +37,7 @@ You will also see any lint errors in the console.
 
 A build of the app is necessary to deploy for testing purposes or for production use.
 To build the project run:
-
+cho um pa, buy medicine, 
 ```bash
 npm run build
 ```
