@@ -1,4 +1,4 @@
-# Casino Dapp Project
+# Redux Protocol Dapp Project
 
 ## Requirements
 
