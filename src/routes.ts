@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 export const routeNames = {
   staking: '/',
   unlock: '/unlock',
-  dashboard: '/casinoswap',
+  dashboard: '/dashboard',
 };
 
 const routes: Array<any> = [

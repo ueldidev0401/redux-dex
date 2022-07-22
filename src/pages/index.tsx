@@ -15,7 +15,7 @@ const CasinoProtocolHome = () => {
             setIsButtonClicked(true);
     };
     return (
-        <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white', marginTop: '28px' }}>
+        <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
             <Row style={{justifyContent:'center'}}>
                 <Col xl="4" md="12" sm="12" className="card-layout">
                     <ButtonGroup>
@@ -45,8 +45,8 @@ const CasinoProtocolHome = () => {
                             <Row>
                                 <Col>
                                     <div style={{float:'left'}}>
-                                        <img src={cardLogo} style={{width:'33px'}}></img>
-                                        <span style={{fontSize:'26px', marginLeft:'15px', color:'black'}}>0.00</span>
+                                        <img src={cardLogo}></img>
+                                        <span style={{marginLeft:'15px', color:'black'}}>0.00</span>
                                     </div>
                                     <Button className="balance-card-buttion">MAX</Button>    
                                 </Col>
