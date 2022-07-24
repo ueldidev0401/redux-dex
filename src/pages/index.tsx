@@ -1,18 +1,33 @@
 import React from 'react';
-import { Row, Col, Button, ButtonGroup, Card } from 'react-bootstrap';
+import Web3 from 'web3';
+import { Row, Col, Button, ButtonGroup, Card, Modal} from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import './index.scss';
 import cardLogo from '../assets/img/card-logo.png';
+import loader from '../assets/img/loader.gif';
 
-import { routeNames } from 'routes';
+const Staking = () => {
+    const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
+    const [isConnectedWallet, setIsConnectedWallet] = useState<boolean>(false);
+    const [isModalShow, setModalShow] = useState<boolean>(false);
 
-const CasinoProtocolHome = () => {
-    const [isButtonClicked, setIsButtonClicked] = useState(false);
     const onClick = (flag) => {
         if(flag == 'Deposit')
             setIsButtonClicked(false);
         else
             setIsButtonClicked(true);
+    };
+    const onConnetWallet = async () => {
+        if(!isConnectedWallet) {
+            setIsConnectedWallet(true);
+            return;
+        }else {
+            setModalShow(true);
+        }
+    };
+    const closeModal = () => {
+        setModalShow(false);
     };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
@@ -45,8 +60,8 @@ const CasinoProtocolHome = () => {
                             <Row>
                                 <Col>
                                     <div style={{float:'left'}}>
-                                        <img src={cardLogo}></img>
-                                        <span style={{marginLeft:'15px', color:'black'}}>0.00</span>
+                                        <img src={cardLogo} style={{float:'left'}}></img>
+                                        <Form.Control type="text" placeholder="0.00" size="lg" style={{width:"100px", border:'0px', marginLeft:'40px'}}></Form.Control>
                                     </div>
                                     <Button className="balance-card-buttion">MAX</Button>    
                                 </Col>
@@ -60,8 +75,13 @@ const CasinoProtocolHome = () => {
                                 </Col>
                             </Row>
                         </Card>
-                        <Button className="card-content-button">
-                            Connect Wallet
+                        <Button className="card-content-button" onClick={() => onConnetWallet()}>
+                            {
+                                !isConnectedWallet ? "Connect Wallet" : 
+                                (
+                                    !isButtonClicked ? "Deposit & Lock" : "Withdraw"
+                                )
+                            }
                         </Button>
                         <p className="card-content-footer">
                         Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time.
@@ -69,8 +89,19 @@ const CasinoProtocolHome = () => {
                     </Card>
                 </Col>
             </Row>
+            <Modal show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
+                <Modal.Header style={{border:"0px"}}>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Waiting for Confirmation</h4>
+                    <p>Confirm this transaction in your wallet.</p>
+                </Modal.Body>
+                <Modal.Footer style={{border:"0px"}}>
+                    <Button onClick={closeModal}>Close</Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
 
-export default CasinoProtocolHome;
+export default Staking;
