@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
-import {Navbar} from 'react-responsive-navbar-overlay';
 import Layout from 'components/Layout';
 import PageNotFound from 'pages/PageNotFound';
 import { routeNames } from 'routes';
