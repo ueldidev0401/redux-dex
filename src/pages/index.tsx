@@ -23,6 +23,7 @@ const Staking = () => {
     const [isStakeAmount, setIsStakeAmount] = useState<number>(0);
     const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
     const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
+    const [isApporveButton, setIsApproveButton] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const WalletState = useSelector(selectors.WalleteState);
@@ -52,6 +53,16 @@ const Staking = () => {
         }else {
             loadWeb3();
         }
+    };
+    const onApprove = async () => {
+        const rdxAddress = tokenAddresses[0].address;
+        const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+        const amount = await web3.utils.toWei(wallet_balance.toString(), "ether");
+        console.log("rdxAddress = ", rdxAddress);
+        const approve = await tokenInst.methods.approve(StakingAddress, amount).send({
+            from : WalletState.account_address
+        });
+        setIsApproveButton(false);
     };
     useEffect(() => {
         if (window.ethereum) {
@@ -85,7 +96,11 @@ const Staking = () => {
             const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
             const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
             const balance = await web3.utils.fromWei(balanceDec, "ether");
-            console.log("balance = ", balance);
+            const allowance = await tokenInst.methods.allowance(accounts[0], StakingAddress).call();
+            if(allowance == 0) {
+                console.log("allowance = ", allowance);
+                setIsApproveButton(true);
+            }
           dispatch(
             updateWalletConnection({
               connection_state: true,
@@ -107,6 +122,13 @@ const Staking = () => {
             const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
             const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
             const balance = await web3.utils.fromWei(balanceDec, "ether");
+
+            const allowance = await tokenInst.methods.allowance(accounts[0], StakingAddress).call();
+            if(allowance == 0) {
+                console.log("allowance = ", allowance);
+                setIsApproveButton(true);
+            }
+
             dispatch(
               updateWalletConnection({
                 connection_state: true,
@@ -197,13 +219,13 @@ const Staking = () => {
                         {
                             !connectionState? (
                                 <Button className="card-content-button" onClick={() => onConnetWallet()}>Connect Wallet</Button>        
-                            ) : (
-                                <Button disabled={isDisableDepositButton} className="card-content-button" onClick={() => onStaking()}>
-                                    {
-                                        !isButtonClicked ? "Deposit & Lock" : "Withdraw"
-                                    }
-                                </Button>        
-                            )
+                            ) : isApporveButton ? ( <Button className="card-content-button" onClick={() => onApprove()}>Approve</Button>) : (
+                                    <Button disabled={isDisableDepositButton} className="card-content-button" onClick={() => onStaking()}>
+                                        {
+                                            !isButtonClicked ? "Deposit & Lock" : "Withdraw"
+                                        }
+                                    </Button>        
+                                )
                         }
                         <p className="card-content-footer">
                         Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time.
