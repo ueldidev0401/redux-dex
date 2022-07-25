@@ -97,7 +97,7 @@
     .balance-card-buttion {
         float : right;
         width : 82px;
-        background: #B268FF;
+        background: #9400FF !important;
         border: 1px solid #E1E2E9 !important;
         border-radius: 5px;
 
@@ -106,13 +106,13 @@
         }
 
         &:hover {
-            background-color: #9400FF;
+            background-color: #B268FF !important;
         }
     }
     .card-content-button {
         margin-top: 39px;
         height:82px;
-        background: #6600AE;
+        background: #9400FF !important;
         border: 1px solid #E1E2E9 !important;
         border-radius: 10px;
         font-style: normal;
@@ -127,7 +127,11 @@
         }
 
         &:hover {
-            background-color: #9400FF;
+            background-color: #870ddf !important;
+        }
+
+        &:disabled {
+            background-color: #B268FF !important;
         }
     }
     .card-content-footer {

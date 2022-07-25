@@ -18,6 +18,9 @@ import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 import * as selectors from "store/selectors";
 import { updateWalletConnection } from "store/actions";
+import { tokenAddresses } from 'config';
+import { AbiItem } from 'web3-utils';
+import tokenABI from '../../../abi/token.abi.json';
 
 declare let window: any;
 
@@ -27,6 +30,8 @@ const Topbar = () => {
 
   const connectionState = WalletState.wallet_connection;
   const account = WalletState.account_address;
+  const wallet_balance = WalletState.wallet_balance;
+  const web3 = new Web3(window.ethereum);
 
   const onhandleConnectWalletButton = () => {
     if (connectionState) return;
@@ -51,20 +56,26 @@ const Topbar = () => {
       .catch(console.error);
   }
 
-  function handleAccountChanged(accounts) {
+  async function handleAccountChanged(accounts) {
     if (accounts.length === 0) {
       console.log("metamask locked");
       dispatch(
         updateWalletConnection({
           connection_state: false,
           account_address: "",
+          wallet_balance : 0,
         })
       );
     } else {
+      const rdxAddress = tokenAddresses[0].address;
+      const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+      const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
+      const balance = await web3.utils.fromWei(balanceDec, "ether");
       dispatch(
         updateWalletConnection({
           connection_state: true,
           account_address: accounts[0].toString(),
+          wallet_balance : balance,
         })
       );
     }
@@ -77,10 +88,15 @@ const Topbar = () => {
           method: "eth_requestAccounts",
         });
         const account = Web3.utils.toChecksumAddress(accounts[0]).toString();
+        const rdxAddress = tokenAddresses[0].address;
+        const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+        const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
+        const balance = await web3.utils.fromWei(balanceDec, "ether");
         dispatch(
           updateWalletConnection({
             connection_state: true,
             account_address: account,
+            wallet_balance : balance,
           })
         );
       } else {
@@ -91,6 +107,7 @@ const Topbar = () => {
         updateWalletConnection({
           connection_state: false,
           account_address: "",
+          wallet_balance : 0,
         })
       );
     }

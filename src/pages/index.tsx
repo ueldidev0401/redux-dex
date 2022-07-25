@@ -5,21 +5,32 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
 import './index.scss';
 import cardLogo from '../assets/img/card-logo.png';
-import loader from '../assets/img/loader.gif';
 
 import { useDispatch, useSelector } from "react-redux";
 import * as selectors from "store/selectors";
 import { updateWalletConnection } from "store/actions";
+import { tokenAddresses } from 'config';
+import { AbiItem } from 'web3-utils';
+import tokenABI from '../abi/token.abi.json';
+import stakingABI from '../abi/staking.abi.json';
+import { StakingAddress } from 'config';
+
 declare let window: any;
 
 const Staking = () => {
     const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
     const [isModalShow, setModalShow] = useState<boolean>(false);
+    const [isStakeAmount, setIsStakeAmount] = useState<number>(0);
+    const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
+    const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const WalletState = useSelector(selectors.WalleteState);
-
     const connectionState = WalletState.wallet_connection;
+    const wallet_balance = WalletState.wallet_balance;
+    const web3 = new Web3(window.ethereum);
+
+    const contract = new web3.eth.Contract(stakingABI as AbiItem[], StakingAddress);
 
     const onClick = (flag) => {
         if(flag == 'Deposit')
@@ -29,6 +40,7 @@ const Staking = () => {
     };
     const onStaking = () => {
         setModalShow(true);
+        deposit(isStakeAmount);
     };
     const closeModal = () => {
         setModalShow(false);
@@ -45,6 +57,9 @@ const Staking = () => {
         if (window.ethereum) {
             window.ethereum.on("accountsChanged", handleAccountChanged);
             checkConnection();
+            if(isStakeAmount == 0) {
+                setIsDisableDepositButton(true);
+            }
         }
     }, []);
 
@@ -55,20 +70,27 @@ const Staking = () => {
           .catch(console.error);
     }
 
-    function handleAccountChanged(accounts) {
+    async function handleAccountChanged(accounts) {
         if (accounts.length === 0) {
           console.log("metamask locked");
           dispatch(
             updateWalletConnection({
               connection_state: false,
               account_address: "",
+              wallet_balance : 0,
             })
           );
         } else {
+            const rdxAddress = tokenAddresses[0].address;
+            const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+            const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
+            const balance = await web3.utils.fromWei(balanceDec, "ether");
+            console.log("balance = ", balance);
           dispatch(
             updateWalletConnection({
               connection_state: true,
               account_address: accounts[0].toString(),
+              wallet_balance : balance,
             })
           );
         }
@@ -81,10 +103,15 @@ const Staking = () => {
               method: "eth_requestAccounts",
             });
             const account = Web3.utils.toChecksumAddress(accounts[0]).toString();
+            const rdxAddress = tokenAddresses[0].address;
+            const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+            const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
+            const balance = await web3.utils.fromWei(balanceDec, "ether");
             dispatch(
               updateWalletConnection({
                 connection_state: true,
                 account_address: account,
+                wallet_balance : balance,
               })
             );
           } else {
@@ -95,9 +122,27 @@ const Staking = () => {
             updateWalletConnection({
               connection_state: false,
               account_address: "",
+              wallet_balance : 0,
             })
           );
         }
+    };
+    const onMaxBalance = () => {
+        setIsStakeAmount(wallet_balance);
+        setIsStakeAmountDollar (wallet_balance / 10);
+        setIsDisableDepositButton(false);
+    };
+    const onhandleStakeAmount = (e) => {
+        setIsStakeAmount(e.target.value);
+        setIsStakeAmountDollar(e.target.value / 10);
+        setIsDisableDepositButton(false);
+        if(e.target.value == 0) setIsDisableDepositButton(true);
+    };
+    const deposit = async(amount) => {
+        const deposit_amount = await web3.utils.toWei(amount, 'ether');
+        const deposit = await contract.methods.stake(deposit_amount).send({
+            from : WalletState.account_address
+        });
     };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
@@ -122,7 +167,11 @@ const Staking = () => {
                                     Stake Amount
                                 </p>
                                 <p style={{textAlign:'right'}}>
-                                    Balance : 0
+                                    Balance : {
+                                        connectionState ? 
+                                            wallet_balance > 0 ? wallet_balance : "0"
+                                         : "0"
+                                    }
                                 </p>
                             </Col>
                         </Row>
@@ -131,9 +180,9 @@ const Staking = () => {
                                 <Col>
                                     <div style={{float:'left'}}>
                                         <img src={cardLogo} style={{float:'left'}}></img>
-                                        <Form.Control type="text" placeholder="0.00" size="lg" style={{width:"100px", border:'0px', marginLeft:'40px'}}></Form.Control>
+                                        <Form.Control value={isStakeAmount} type="text" placeholder="0.00" size="lg" style={{width:"100px", border:'0px', marginLeft:'40px'}} onChange={onhandleStakeAmount}></Form.Control>
                                     </div>
-                                    <Button className="balance-card-buttion">MAX</Button>    
+                                    <Button className="balance-card-buttion" onClick={onMaxBalance}>MAX</Button>    
                                 </Col>
                             </Row>
                             <Row>
@@ -141,7 +190,7 @@ const Staking = () => {
                                     <div style={{float:'left'}}>
                                         <p style={{marginTop:"10px"}}>RDX</p>
                                     </div>
-                                    <span style={{float:'right', marginTop:'10px', color:'black'}}>$0.00</span>
+                                    <span style={{float:'right', marginTop:'10px', color:'black'}}>${isStakeAmountDollar}</span>
                                 </Col>
                             </Row>
                         </Card>
@@ -149,7 +198,7 @@ const Staking = () => {
                             !connectionState? (
                                 <Button className="card-content-button" onClick={() => onConnetWallet()}>Connect Wallet</Button>        
                             ) : (
-                                <Button className="card-content-button" onClick={() => onStaking()}>
+                                <Button disabled={isDisableDepositButton} className="card-content-button" onClick={() => onStaking()}>
                                     {
                                         !isButtonClicked ? "Deposit & Lock" : "Withdraw"
                                     }
