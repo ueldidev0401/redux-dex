@@ -21,8 +21,8 @@ declare let window: any;
 
 const Staking = () => {
     const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-    const [isModalShow, setModalShow] = useState<boolean>(true);
-    const [isTransactionConfirm, setIsTransactionConfirm] = useState<boolean>(true);
+    const [isModalShow, setModalShow] = useState<boolean>(false);
+    const [isTransactionConfirm, setIsTransactionConfirm] = useState<boolean>(false);
     const [isStakeAmount, setIsStakeAmount] = useState<number>(0);
     const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
     const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
@@ -43,11 +43,9 @@ const Staking = () => {
             setIsButtonClicked(true);
     };
     const onStaking = () => {
-        setModalShow(true);
         deposit(isStakeAmount);
     };
     const onWithdraw = () => {
-        setModalShow(true);
         withdraw(isStakeAmount);
     };
     
@@ -169,16 +167,28 @@ const Staking = () => {
         if(e.target.value == 0) setIsDisableDepositButton(true);
     };
     const deposit = async(amount) => {
-        const deposit_amount = await web3.utils.toWei(amount, 'ether');
-        const deposit = await contract.methods.stake(deposit_amount).send({
-            from : WalletState.account_address
-        });
+        try {
+            setModalShow(true);
+            const deposit_amount = await web3.utils.toWei(amount, 'ether');
+            const deposit = await contract.methods.stake(deposit_amount).send({
+                from : WalletState.account_address
+            });
+            setIsTransactionConfirm(true);
+        } catch(e) {
+            setModalShow(false);
+        }
     };
     const withdraw = async(amount) => {
-        const withdraw_amount = await web3.utils.toWei(amount, 'ether');
-        const withdraw = await contract.methods.unstake(withdraw_amount).send({
-            from : WalletState.account_address
-        });
+        try {
+            setModalShow(true);
+            const withdraw_amount = await web3.utils.toWei(amount, 'ether');
+            const withdraw = await contract.methods.unstake(withdraw_amount).send({
+                from : WalletState.account_address
+            });
+            setIsTransactionConfirm(true);
+        } catch (e) {
+            setModalShow(false);
+        }
     };
     const onDashboard = () => {
         window.location.href="/dashboard";

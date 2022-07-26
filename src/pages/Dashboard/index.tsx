@@ -14,13 +14,17 @@ import { AbiItem } from 'web3-utils';
 import tokenABI from '../../abi/token.abi.json';
 import stakingABI from '../../abi/staking.abi.json';
 import { StakingAddress } from 'config';
+import confirmImage from '../../assets/img/Shape.png';
+import transactionLoader from '../../assets/img/loader.gif';
+
 
 declare let window: any;
 
 const Dashboard = () => {
     const [depositedAmount, setDepositedAmount] = useState<any>('0');
     const [earnedRDX, setEarnedRDX] = useState<any>('0');
-
+    const [isModalShow, setModalShow] = useState<boolean>(false);
+    const [isTransactionConfirm, setIsTransactionConfirm] = useState<boolean>(false);
     const dispatch = useDispatch();
     const WalletState = useSelector(selectors.WalleteState);
     const connectionState = WalletState.wallet_connection;
@@ -71,16 +75,31 @@ const Dashboard = () => {
             );
         }
     }
+    const closeModal = () => {
+        setModalShow(false);
+    };
     const onClaim = async() =>{
-        await contract.methods.claimReward().send({
-            from : WalletState.account_address
-        });
+        try {
+            setModalShow(true);
+            await contract.methods.claimReward().send({
+                from : WalletState.account_address
+            });
+            setIsTransactionConfirm(true);
+        } catch (e) {
+            setModalShow(false);
+        }
     };
 
     const onCompound = async() => {
-        await contract.methods.compound(WalletState.account_address).send({
-            from : WalletState.account_address
-        });
+        try {
+            setModalShow(true);
+            await contract.methods.compound(WalletState.account_address).send({
+                from : WalletState.account_address
+            });
+            setIsTransactionConfirm(true);
+        } catch (e) {
+            setModalShow(false);
+        }
     };
     const onStakePage = () => {
         window.location.href = "/";
@@ -120,6 +139,30 @@ const Dashboard = () => {
                     <p className="dashboard-content">Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
                 </Col>
             </Row>
+            <Modal className="modal-form" show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
+                <Modal.Body>
+                    {
+                        !isTransactionConfirm ? (<img className="loadingbar" src={transactionLoader}></img>) : 
+                        (<img className="confirmImage" src={confirmImage}></img>)
+                    }
+                    {
+                        !isTransactionConfirm ? (<p className="modal-title">Waiting for Confirmation</p>) : 
+                        (<p className="confirm-title">Transaction Submitted</p>)
+                    }
+                    {
+                        !isTransactionConfirm ? (<p className="modal-content">Confirm this transaction in your wallet.</p>) : 
+                        (<p className="confirm-content">View on etherscan</p>)
+                    }
+                </Modal.Body>
+                <Modal.Footer className = "modal-footer">
+                    {
+                        !isTransactionConfirm ? "" : (<Button className="close-button" onClick={closeModal}>Close</Button>)
+                    }
+                    {
+                        !isTransactionConfirm ? "" : (<Button className="dashboard-button" onClick={onStakePage}>Stake</Button>)
+                    }
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
