@@ -208,7 +208,7 @@ const Staking = () => {
                                 <p style={{textAlign:'right'}}>
                                     Balance : {
                                         connectionState ? 
-                                            wallet_balance > 0 ? wallet_balance : "0"
+                                            wallet_balance > 0 ? Math.round(Number(wallet_balance)*100000)/100000 : "0"
                                          : "0"
                                     }
                                 </p>
