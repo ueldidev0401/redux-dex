@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
 import './index.scss';
 import cardLogo from '../assets/img/card-logo.png';
-
+import transactionLoader from '../assets/img/loader.gif';
 import { useDispatch, useSelector } from "react-redux";
 import * as selectors from "store/selectors";
 import { updateWalletConnection } from "store/actions";
@@ -15,11 +15,12 @@ import tokenABI from '../abi/token.abi.json';
 import stakingABI from '../abi/staking.abi.json';
 import { StakingAddress } from 'config';
 
+
 declare let window: any;
 
 const Staking = () => {
     const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-    const [isModalShow, setModalShow] = useState<boolean>(false);
+    const [isModalShow, setModalShow] = useState<boolean>(true);
     const [isStakeAmount, setIsStakeAmount] = useState<number>(0);
     const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
     const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
@@ -233,12 +234,11 @@ const Staking = () => {
                     </Card>
                 </Col>
             </Row>
-            <Modal show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
-                <Modal.Header style={{border:"0px"}}>
-                </Modal.Header>
+            <Modal className="modal-form" show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Body>
-                    <h4>Waiting for Confirmation</h4>
-                    <p>Confirm this transaction in your wallet.</p>
+                    <img src={transactionLoader} style={{width:"111px"}}></img>
+                    <p className="modal-title">Waiting for Confirmation</p>
+                    <p className="modal-content">Confirm this transaction in your wallet.</p>
                 </Modal.Body>
                 <Modal.Footer style={{border:"0px"}}>
                     <Button onClick={closeModal}>Close</Button>

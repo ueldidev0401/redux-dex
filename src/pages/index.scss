@@ -192,3 +192,27 @@
         margin-top: 24px;
     }
 }
+.modal-form {
+}
+.modal-title {
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 39px;
+    text-align: center;
+    letter-spacing: -0.01em;
+    color: #000000;
+}
+.modal-content {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.01em;
+
+    color: #1D1D1B;
+    border : 0px !important;
+    margin-top: 10px;
+}
