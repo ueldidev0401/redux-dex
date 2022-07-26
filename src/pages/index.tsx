@@ -14,6 +14,7 @@ import { AbiItem } from 'web3-utils';
 import tokenABI from '../abi/token.abi.json';
 import stakingABI from '../abi/staking.abi.json';
 import { StakingAddress } from 'config';
+import confirmImage from '../assets/img/Shape.png';
 
 
 declare let window: any;
@@ -21,6 +22,7 @@ declare let window: any;
 const Staking = () => {
     const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
     const [isModalShow, setModalShow] = useState<boolean>(true);
+    const [isTransactionConfirm, setIsTransactionConfirm] = useState<boolean>(true);
     const [isStakeAmount, setIsStakeAmount] = useState<number>(0);
     const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
     const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
@@ -178,6 +180,9 @@ const Staking = () => {
             from : WalletState.account_address
         });
     };
+    const onDashboard = () => {
+        window.location.href="/dashboard";
+    };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
             <Row style={{justifyContent:'center'}}>
@@ -247,12 +252,26 @@ const Staking = () => {
             </Row>
             <Modal className="modal-form" show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
                 <Modal.Body>
-                    <img src={transactionLoader} style={{width:"111px"}}></img>
-                    <p className="modal-title">Waiting for Confirmation</p>
-                    <p className="modal-content">Confirm this transaction in your wallet.</p>
+                    {
+                        !isTransactionConfirm ? (<img className="loadingbar" src={transactionLoader}></img>) : 
+                        (<img className="confirmImage" src={confirmImage}></img>)
+                    }
+                    {
+                        !isTransactionConfirm ? (<p className="modal-title">Waiting for Confirmation</p>) : 
+                        (<p className="confirm-title">Transaction Submitted</p>)
+                    }
+                    {
+                        !isTransactionConfirm ? (<p className="modal-content">Confirm this transaction in your wallet.</p>) : 
+                        (<p className="confirm-content">View on etherscan</p>)
+                    }
                 </Modal.Body>
-                <Modal.Footer style={{border:"0px"}}>
-                    <Button onClick={closeModal}>Close</Button>
+                <Modal.Footer className = "modal-footer">
+                    {
+                        !isTransactionConfirm ? "" : (<Button className="close-button" onClick={closeModal}>Close</Button>)
+                    }
+                    {
+                        !isTransactionConfirm ? "" : (<Button className="dashboard-button" onClick={onDashboard}>My Dashboard</Button>)
+                    }
                 </Modal.Footer>
             </Modal>
         </div>

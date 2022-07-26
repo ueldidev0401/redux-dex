@@ -82,6 +82,9 @@ const Dashboard = () => {
             from : WalletState.account_address
         });
     };
+    const onStakePage = () => {
+        window.location.href = "/";
+    };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Inter', color: 'white'}}>
             <Row style={{justifyContent:'center', marginTop:"40px"}}>
@@ -93,7 +96,7 @@ const Dashboard = () => {
                                 <div className="daboard-content-header">Deposited</div>
                                 <div className='daboard-content-body'>{Math.round(Number(depositedAmount)*100000)/100000}</div>
                                 <div className='button-layout'>
-                                    <Button className='dashboard-content-button'>Stake More</Button>
+                                    <Button className='dashboard-content-button' onClick={onStakePage}>Stake More</Button>
                                 </div>
                             </Col>
                             <Col xl="3" md="6" sm="6" xs="6" style={{padding:"0"}}>
