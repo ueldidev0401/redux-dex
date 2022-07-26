@@ -44,6 +44,11 @@ const Staking = () => {
         setModalShow(true);
         deposit(isStakeAmount);
     };
+    const onWithdraw = () => {
+        setModalShow(true);
+        withdraw(isStakeAmount);
+    };
+    
     const closeModal = () => {
         setModalShow(false);
     };
@@ -58,7 +63,7 @@ const Staking = () => {
     const onApprove = async () => {
         const rdxAddress = tokenAddresses[0].address;
         const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
-        const amount = await web3.utils.toWei(wallet_balance.toString(), "ether");
+        const amount = await web3.utils.toWei("9999999999999", "ether");
         console.log("rdxAddress = ", rdxAddress);
         const approve = await tokenInst.methods.approve(StakingAddress, amount).send({
             from : WalletState.account_address
@@ -167,6 +172,12 @@ const Staking = () => {
             from : WalletState.account_address
         });
     };
+    const withdraw = async(amount) => {
+        const withdraw_amount = await web3.utils.toWei(amount, 'ether');
+        const withdraw = await contract.methods.unstake(withdraw_amount).send({
+            from : WalletState.account_address
+        });
+    };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
             <Row style={{justifyContent:'center'}}>
@@ -221,7 +232,7 @@ const Staking = () => {
                             !connectionState? (
                                 <Button className="card-content-button" onClick={() => onConnetWallet()}>Connect Wallet</Button>        
                             ) : isApporveButton ? ( <Button className="card-content-button" onClick={() => onApprove()}>Approve</Button>) : (
-                                    <Button disabled={isDisableDepositButton} className="card-content-button" onClick={() => onStaking()}>
+                                    <Button disabled={isDisableDepositButton} className="card-content-button" onClick={() => !isButtonClicked ? onStaking() : onWithdraw()}>
                                         {
                                             !isButtonClicked ? "Deposit & Lock" : "Withdraw"
                                         }
