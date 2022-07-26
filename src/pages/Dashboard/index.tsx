@@ -81,6 +81,7 @@ const Dashboard = () => {
     const onClaim = async() =>{
         try {
             setModalShow(true);
+            setIsTransactionConfirm(false);
             await contract.methods.claimReward().send({
                 from : WalletState.account_address
             });
@@ -93,6 +94,7 @@ const Dashboard = () => {
     const onCompound = async() => {
         try {
             setModalShow(true);
+            setIsTransactionConfirm(false);
             await contract.methods.compound(WalletState.account_address).send({
                 from : WalletState.account_address
             });

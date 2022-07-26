@@ -169,6 +169,7 @@ const Staking = () => {
     const deposit = async(amount) => {
         try {
             setModalShow(true);
+            setIsTransactionConfirm(false);
             const deposit_amount = await web3.utils.toWei(amount, 'ether');
             const deposit = await contract.methods.stake(deposit_amount).send({
                 from : WalletState.account_address
@@ -181,6 +182,7 @@ const Staking = () => {
     const withdraw = async(amount) => {
         try {
             setModalShow(true);
+            setIsTransactionConfirm(false);
             const withdraw_amount = await web3.utils.toWei(amount, 'ether');
             const withdraw = await contract.methods.unstake(withdraw_amount).send({
                 from : WalletState.account_address
