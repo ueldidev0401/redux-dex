@@ -27,6 +27,7 @@ const Staking = () => {
     const [isStakeAmountDollar, setIsStakeAmountDollar] = useState<number>(0);
     const [isDisableDepositButton, setIsDisableDepositButton] = useState<boolean>(false);
     const [isApporveButton, setIsApproveButton] = useState<boolean>(false);
+    const [depositedAmount, setDepositedAmount] = useState<any>('0');
 
     const dispatch = useDispatch();
     const WalletState = useSelector(selectors.WalleteState);
@@ -102,6 +103,9 @@ const Staking = () => {
             const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
             const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
             const balance = await web3.utils.fromWei(balanceDec, "ether");
+            const userInfo = await contract.methods.users(accounts[0]).call();
+            const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
+            setDepositedAmount( depositedAmount_t );
             const allowance = await tokenInst.methods.allowance(accounts[0], StakingAddress).call();
             if(allowance == 0) {
                 console.log("allowance = ", allowance);
@@ -128,7 +132,9 @@ const Staking = () => {
             const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
             const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
             const balance = await web3.utils.fromWei(balanceDec, "ether");
-
+            const userInfo = await contract.methods.users(accounts[0]).call();
+            const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
+            setDepositedAmount( depositedAmount_t );
             const allowance = await tokenInst.methods.allowance(accounts[0], StakingAddress).call();
             if(allowance == 0) {
                 console.log("allowance = ", allowance);
@@ -156,8 +162,14 @@ const Staking = () => {
         }
     };
     const onMaxBalance = () => {
-        setIsStakeAmount(wallet_balance);
-        setIsStakeAmountDollar (wallet_balance / 10);
+        if (!isButtonClicked){
+            setIsStakeAmount(wallet_balance);
+            setIsStakeAmountDollar (wallet_balance / 10);
+        } else{
+            setIsStakeAmount(depositedAmount);
+            setIsStakeAmountDollar (depositedAmount / 10);
+        }
+        
         setIsDisableDepositButton(false);
     };
     const onhandleStakeAmount = (e) => {
@@ -220,7 +232,9 @@ const Staking = () => {
                                 <p style={{textAlign:'right'}}>
                                     Balance : {
                                         connectionState ? 
+                                            !isButtonClicked ?
                                             wallet_balance > 0 ? Math.round(Number(wallet_balance)*100000)/100000 : "0"
+                                            :depositedAmount > 0 ? Math.round(Number(depositedAmount)*100000)/100000 : "0"
                                          : "0"
                                     }
                                 </p>
