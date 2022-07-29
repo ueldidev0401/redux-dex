@@ -186,6 +186,18 @@ const Staking = () => {
             const deposit = await contract.methods.stake(deposit_amount).send({
                 from : WalletState.account_address
             });
+
+            const rdxAddress = tokenAddresses[0].address;
+            const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
+            const balanceDec = await tokenInst.methods.balanceOf(WalletState.account_address).call();
+            const balance = await web3.utils.fromWei(balanceDec, "ether");
+            dispatch(
+                updateWalletConnection({
+                  connection_state: true,
+                  account_address: WalletState.account_address.toString(),
+                  wallet_balance : balance,
+                })
+              );
             setIsTransactionConfirm(true);
         } catch(e) {
             setModalShow(false);
@@ -199,6 +211,9 @@ const Staking = () => {
             const withdraw = await contract.methods.unstake(withdraw_amount).send({
                 from : WalletState.account_address
             });
+            const userInfo = await contract.methods.users(WalletState.account_address).call();
+            const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
+            setDepositedAmount( depositedAmount_t );
             setIsTransactionConfirm(true);
         } catch (e) {
             setModalShow(false);

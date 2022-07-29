@@ -85,6 +85,12 @@ const Dashboard = () => {
             await contract.methods.claimReward().send({
                 from : WalletState.account_address
             });
+            const userInfo = await contract.methods.users(WalletState.account_address).call();
+            const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
+            setDepositedAmount( depositedAmount_t );
+            const earnedRDX_t = await contract.methods.earned(WalletState.account_address).call();
+            const earned_eth = web3.utils.fromWei(earnedRDX_t, "ether");
+            setEarnedRDX( earned_eth );
             setIsTransactionConfirm(true);
         } catch (e) {
             setModalShow(false);
@@ -98,6 +104,12 @@ const Dashboard = () => {
             await contract.methods.compound(WalletState.account_address).send({
                 from : WalletState.account_address
             });
+            const userInfo = await contract.methods.users(WalletState.account_address).call();
+            const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
+            setDepositedAmount( depositedAmount_t );
+            const earnedRDX_t = await contract.methods.earned(WalletState.account_address).call();
+            const earned_eth = web3.utils.fromWei(earnedRDX_t, "ether");
+            setEarnedRDX( earned_eth );
             setIsTransactionConfirm(true);
         } catch (e) {
             setModalShow(false);
@@ -159,9 +171,6 @@ const Dashboard = () => {
                 <Modal.Footer className = "modal-footer">
                     {
                         !isTransactionConfirm ? "" : (<Button className="close-button" onClick={closeModal}>Close</Button>)
-                    }
-                    {
-                        !isTransactionConfirm ? "" : (<Button className="dashboard-button" onClick={onStakePage}>Stake</Button>)
                     }
                 </Modal.Footer>
             </Modal>
