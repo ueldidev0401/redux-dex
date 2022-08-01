@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { routeNames } from "routes";
-import logo from "../../../assets/img/main-logo.png";
+import logo from "../../../assets/img/redux-light.svg";
 import metamaskLogo from "../../../assets/img/metamask.png";
 import "./index.scss";
 import Web3 from "web3";
