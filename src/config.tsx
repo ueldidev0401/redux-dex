@@ -7,3 +7,4 @@ export const tokenAddresses = [
     }
 ];
 export const StakingAddress = '0xD972f4CDD3003621c0d1eD65D0E8E1944FE0c263';
+export const VestingAddress = '0x3705B2b268Ee46c2058814ABAD979ca498d2aA77';

@@ -13,7 +13,8 @@ import { tokenAddresses } from 'config';
 import { AbiItem } from 'web3-utils';
 import tokenABI from '../../abi/token.abi.json';
 import stakingABI from '../../abi/staking.abi.json';
-import { StakingAddress } from 'config';
+import vestingABI from '../../abi/vesting.abi.json';
+import { StakingAddress, VestingAddress } from 'config';
 import confirmImage from '../../assets/img/Shape.png';
 import transactionLoader from '../../assets/img/loader.gif';
 
@@ -23,6 +24,8 @@ declare let window: any;
 const Dashboard = () => {
     const [depositedAmount, setDepositedAmount] = useState<any>('0');
     const [earnedRDX, setEarnedRDX] = useState<any>('0');
+    const [vestingInfo, setVestingInfo] = useState<any>('0');
+    const [claimableRDX, setClaimableRDX] = useState<any>('0');
     const [isModalShow, setModalShow] = useState<boolean>(false);
     const [isTransactionConfirm, setIsTransactionConfirm] = useState<boolean>(false);
     const dispatch = useDispatch();
@@ -31,7 +34,8 @@ const Dashboard = () => {
     const wallet_balance = WalletState.wallet_balance;
     const web3 = new Web3(window.ethereum);
 
-    const contract = new web3.eth.Contract(stakingABI as AbiItem[], StakingAddress);
+    const StakingContract = new web3.eth.Contract(stakingABI as AbiItem[], StakingAddress);
+    const VestingContract = new web3.eth.Contract(vestingABI as AbiItem[], VestingAddress);
     useEffect(() => {
         if (window.ethereum) {
             window.ethereum.on("accountsChanged", handleAccountChanged);
@@ -60,12 +64,20 @@ const Dashboard = () => {
             const tokenInst = new web3.eth.Contract(tokenABI as AbiItem[], rdxAddress);
             const balanceDec = await tokenInst.methods.balanceOf(accounts[0]).call();
             const balance = await web3.utils.fromWei(balanceDec, "ether");
-            const userInfo = await contract.methods.users(accounts[0]).call();
+            const userInfo = await StakingContract.methods.users(accounts[0]).call();
             const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
             setDepositedAmount( depositedAmount_t );
-            const earnedRDX_t = await contract.methods.earned(accounts[0]).call();
+            const earnedRDX_t = await StakingContract.methods.earned(accounts[0]).call();
             const earned_eth = web3.utils.fromWei(earnedRDX_t, "ether");
             setEarnedRDX( earned_eth );
+
+            const vestingUserInfo = await VestingContract.methods.investorsInfo(accounts[0]).call();
+            const TotalAmuntofRDX_t = web3.utils.fromWei(vestingUserInfo[2], "ether");
+            setVestingInfo( TotalAmuntofRDX_t );
+
+            const withdrawableTokens = await VestingContract.methods.withdrawableTokens(accounts[0]).call();
+            const withdrawableT_t = web3.utils.fromWei(withdrawableTokens, "ether");
+            setClaimableRDX( withdrawableT_t );
             dispatch(
                 updateWalletConnection({
                 connection_state: true,
@@ -82,13 +94,13 @@ const Dashboard = () => {
         try {
             setModalShow(true);
             setIsTransactionConfirm(false);
-            await contract.methods.claimReward().send({
+            await StakingContract.methods.claimReward().send({
                 from : WalletState.account_address
             });
-            const userInfo = await contract.methods.users(WalletState.account_address).call();
+            const userInfo = await StakingContract.methods.users(WalletState.account_address).call();
             const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
             setDepositedAmount( depositedAmount_t );
-            const earnedRDX_t = await contract.methods.earned(WalletState.account_address).call();
+            const earnedRDX_t = await StakingContract.methods.earned(WalletState.account_address).call();
             const earned_eth = web3.utils.fromWei(earnedRDX_t, "ether");
             setEarnedRDX( earned_eth );
             setIsTransactionConfirm(true);
@@ -96,18 +108,38 @@ const Dashboard = () => {
             setModalShow(false);
         }
     };
+    const onVestingClaim = async() =>{
+        try {
+            setModalShow(true);
+            setIsTransactionConfirm(false);
+            await VestingContract.methods.withdrawTokens().send({
+                from : WalletState.account_address
+            });
 
+            const vestingUserInfo = await VestingContract.methods.investorsInfo(WalletState.account_address).call();
+            const TotalAmuntofRDX_t = web3.utils.fromWei(vestingUserInfo[2], "ether");
+            setVestingInfo( TotalAmuntofRDX_t );
+
+            const withdrawableTokens = await VestingContract.methods.withdrawableTokens(WalletState.account_address).call();
+            const withdrawableT_t = web3.utils.fromWei(withdrawableTokens, "ether");
+            setClaimableRDX( withdrawableT_t );
+
+            setIsTransactionConfirm(true);
+        } catch (e) {
+            setModalShow(false);
+        }
+    };
     const onCompound = async() => {
         try {
             setModalShow(true);
             setIsTransactionConfirm(false);
-            await contract.methods.compound(WalletState.account_address).send({
+            await StakingContract.methods.compound(WalletState.account_address).send({
                 from : WalletState.account_address
             });
-            const userInfo = await contract.methods.users(WalletState.account_address).call();
+            const userInfo = await StakingContract.methods.users(WalletState.account_address).call();
             const depositedAmount_t = web3.utils.fromWei(userInfo[0], "ether");
             setDepositedAmount( depositedAmount_t );
-            const earnedRDX_t = await contract.methods.earned(WalletState.account_address).call();
+            const earnedRDX_t = await StakingContract.methods.earned(WalletState.account_address).call();
             const earned_eth = web3.utils.fromWei(earnedRDX_t, "ether");
             setEarnedRDX( earned_eth );
             setIsTransactionConfirm(true);
@@ -120,7 +152,7 @@ const Dashboard = () => {
     };
     return (
         <div className="home-container mb-5" style={{ fontFamily: 'Inter', color: 'white'}}>
-            <Row style={{justifyContent:'center', marginTop:"40px"}}>
+            <Row style={{justifyContent:'center', marginTop:"30px"}}>
                 <Col xl="6" md="12" sm="12" style={{textAlign : "center"}}>
                     <p className="dashboard-title">My Dashboard</p>
                     <Card className="custom-card">
@@ -150,7 +182,28 @@ const Dashboard = () => {
                             </Col>  
                         </Row>
                     </Card>
-                    <p className="dashboard-content">Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
+                    <p className="dashboard-content" style={{fontSize:'18px'}}>Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
+                </Col>
+            </Row>
+            <Row style={{justifyContent:'center', marginTop:"30px"}}>
+                <Col xl="6" md="12" sm="12" style={{textAlign : "center"}}>
+                    <p className="dashboard-title">Vesting</p>
+                    <Card className="custom-card" style={{ marginTop:"20px"}}>
+                        <Row>
+                            <Col xl="6" md="6" sm="6" xs="6" style={{padding:"0"}}>
+                                <div className="daboard-content-header">Total Amount of $RDX</div>
+                                <div className='daboard-content-body'>{Math.round(Number(vestingInfo)*100000)/100000}</div>
+                            </Col>
+                            <Col xl="6" md="6" sm="6" xs="6" style={{padding:"0"}}>
+                                <div className="daboard-content-header">Total $RDX Claimable</div>
+                                <div className='daboard-content-body'>{Math.round(Number(claimableRDX)*100000)/100000}</div>
+                                <div className='button-layout'>
+                                    <Button className='dashboard-content-button' onClick={onVestingClaim}>Claim</Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Card>
+                    <p className="dashboard-content" style={{fontSize:'18px'}}>For all airdropped users: Starting on Sept 19t, you will be able to claim the remaining 50% of your $RDX tokens at a rate of 10% per month for 5 months.</p>
                 </Col>
             </Row>
             <Modal className="modal-form" show={isModalShow} onHide={closeModal} aria-labelledby="contained-modal-title-vcenter" centered>
