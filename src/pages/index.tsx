@@ -223,7 +223,7 @@ const Staking = () => {
         window.location.href="/dashboard";
     };
     return (
-        <div className="home-container mb-5" style={{ fontFamily: 'Segoe UI', color: 'white'}}>
+        <div className="home-container mb-5" style={{ color: 'white'}}>
             <Row style={{justifyContent:'center'}}>
                 <Col xl="4" md="12" sm="12" className="card-layout">
                     <ButtonGroup>
