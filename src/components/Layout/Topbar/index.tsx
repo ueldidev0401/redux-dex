@@ -117,7 +117,7 @@ const Topbar = () => {
     <div>
       <div className="Topbar">
         <p>
-          Always make sure the URL is reduxprotocol.io - bookmark it to be safe.
+          Always make sure the URL is app.reduxprotocol.io - bookmark it to be safe.
         </p>
       </div>
       <BsNavbar className="px-5 py-3" expand="lg" collapseOnSelect>

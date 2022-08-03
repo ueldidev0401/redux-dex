@@ -2,9 +2,9 @@ export const dAppName = 'Redux Protocol';
 export const infuraId = '0b53e6bb2b41489da445ff125dd0cea2';
 export const tokenAddresses = [
     {
-        address : '0xa7217fac7f1abf2e20e53e07d2b746fca2b7cd67',
+        address : '0xd8c4ef2d99c9f962180008418a5665fcc4b99ecd',
         token : 'RDX'
     }
 ];
-export const StakingAddress = '0xD972f4CDD3003621c0d1eD65D0E8E1944FE0c263';
-export const VestingAddress = '0x3705B2b268Ee46c2058814ABAD979ca498d2aA77';
+export const StakingAddress = '0x14EfEfD1E78082ac15FB198D345d4fe7A25158E1';
+export const VestingAddress = '0x683Dc6717006f6693BC948559C21E2aEaF8fc509';
