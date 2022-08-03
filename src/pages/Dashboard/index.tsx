@@ -159,14 +159,14 @@ const Dashboard = () => {
                         <Row>
                             <Col xl="3" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">Deposited</div>
-                                <div className='daboard-content-body'>{Math.round(Number(depositedAmount)*100000)/100000}</div>
+                                <div className='daboard-content-body'>{Math.round(Number(depositedAmount)*100)/100}</div>
                                 <div className='button-layout'>
                                     <Button className='dashboard-content-button' onClick={onStakePage}>Stake More</Button>
                                 </div>
                             </Col>
                             <Col xl="3" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">Earned RDX</div>
-                                <div className='daboard-content-body'>{Math.round(Number(earnedRDX)*100000)/100000}</div>
+                                <div className='daboard-content-body'>{Math.round(Number(earnedRDX)*100)/100}</div>
                                 <div className='button-layout'>
                                     <Button className='dashboard-content-button' onClick={() => onClaim()}>Claim</Button>
                                     <Button className='dashboard-content-button-compound' onClick={() => onCompound()}>Compound</Button>
@@ -174,7 +174,7 @@ const Dashboard = () => {
                             </Col>
                             <Col xl="3" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">APY</div>
-                                <div className='daboard-content-body'>2.56%</div>
+                                <div className='daboard-content-body'>24%</div>
                             </Col>
                             <Col xl="3" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">TVL</div>
@@ -182,7 +182,7 @@ const Dashboard = () => {
                             </Col>  
                         </Row>
                     </Card>
-                    <p className="dashboard-content" style={{fontSize:'18px'}}>Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
+                    <p className="dashboard-content" style={{fontSize:'18px'}}>Your RDX tokens will be locked for 45 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
                 </Col>
             </Row>
             <Row style={{justifyContent:'center', marginTop:"30px"}}>
@@ -192,11 +192,11 @@ const Dashboard = () => {
                         <Row>
                             <Col xl="6" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">Total Amount of $RDX</div>
-                                <div className='daboard-content-body'>{Math.round(Number(vestingInfo)*100000)/100000}</div>
+                                <div className='daboard-content-body'>{Math.round(Number(vestingInfo)*100)/100}</div>
                             </Col>
                             <Col xl="6" md="6" sm="6" xs="6" style={{padding:"0"}}>
                                 <div className="daboard-content-header">Total $RDX Claimable</div>
-                                <div className='daboard-content-body'>{Math.round(Number(claimableRDX)*100000)/100000}</div>
+                                <div className='daboard-content-body'>{Math.round(Number(claimableRDX)*100)/100}</div>
                                 <div className='button-layout'>
                                     <Button className='dashboard-content-button' onClick={onVestingClaim}>Claim</Button>
                                 </div>

@@ -235,7 +235,7 @@ const Staking = () => {
                             <Col>
                                 <p>
                                     Stake RDX to participate in whitelists for our upcoming IDOs. 
-                                    <span style={{color:'#6600AE'}}>&nbsp;Learn more</span>
+                                    <a target = "_blank" rel = "noreferrer" href = "https://reduxprotocol.medium.com/its-been-a-busy-and-eventful-couple-of-months-here-at-redux-as-we-get-ready-to-relaunch-or-token-f014b566ef5b?source=friends_link&sk=c3410b9d19d919f9a58eb4779aea69b3"style={{color:'#6600AE'}}>&nbsp;Learn more</a>
                                 </p>
                             </Col>
                         </Row>
@@ -248,8 +248,8 @@ const Staking = () => {
                                     Balance : {
                                         connectionState ? 
                                             !isButtonClicked ?
-                                            wallet_balance > 0 ? Math.round(Number(wallet_balance)*100000)/100000 : "0"
-                                            :depositedAmount > 0 ? Math.round(Number(depositedAmount)*100000)/100000 : "0"
+                                            wallet_balance > 0 ? Math.round(Number(wallet_balance)*100)/100 : "0"
+                                            :depositedAmount > 0 ? Math.round(Number(depositedAmount)*100)/100 : "0"
                                          : "0"
                                     }
                                 </p>
@@ -286,7 +286,7 @@ const Staking = () => {
                                 )
                         }
                         <p className="card-content-footer">
-                        Your RDX tokens will be locked for 30 days. After this period, you’re free to withdraw at any time.
+                        Your RDX tokens will be locked for 45 days. After this period, you’re free to withdraw at any time.
                         </p>
                     </Card>
                 </Col>
