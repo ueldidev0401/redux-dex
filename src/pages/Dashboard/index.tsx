@@ -182,7 +182,7 @@ const Dashboard = () => {
                             </Col>  
                         </Row>
                     </Card>
-                    <p className="dashboard-content" style={{fontSize:'18px'}}>Your RDX tokens will be locked for 45 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 30 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
+                    <p className="dashboard-content" style={{fontSize:'18px'}}>Your RDX tokens will be locked for 45 days. After this period, you’re free to withdraw at any time. Stake a minimum of 500 RDX for 45 days to participate. Every additional 500 RDX gets you an additional lottery ticket increasing your probability of being whitelisted in one of our IDOs.</p>
                 </Col>
             </Row>
             <Row style={{justifyContent:'center', marginTop:"30px"}}>
